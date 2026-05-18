@@ -47,14 +47,21 @@ class UserService:
 
         food_count = db.query(UserFood).filter(UserFood.user_id == user_id).count()
         tool_count = db.query(UserTool).filter(UserTool.user_id == user_id).count()
-        pet_count = db.query(UserPet).filter(UserPet.user_id == user_id).count()
+        animal_count = db.query(UserAnimal).filter(UserAnimal.user_id == user_id).count()
+        plant_count = db.query(UserPlant).filter(UserPlant.user_id == user_id).count()
+        pet_count = animal_count + plant_count
+
+        # 计算工具和食物的总数量（考虑count字段）
+        from sqlalchemy import func
+        tool_total = db.query(func.coalesce(func.sum(UserTool.count), 0)).filter(UserTool.user_id == user_id).scalar()
+        food_total = db.query(func.coalesce(func.sum(UserFood.count), 0)).filter(UserFood.user_id == user_id).scalar()
 
         return UserDetail(
             id=user.id,
             username=user.username,
             level=user.level,
-            food_count=food_count,
-            tool_count=tool_count,
+            food_count=food_total,
+            tool_count=tool_total,
             pet_count=pet_count,
             created_at=user.created_at,
             updated_at=user.updated_at

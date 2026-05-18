@@ -1,6 +1,8 @@
 from pydantic import BaseModel, Field
 from typing import Optional, List
 from datetime import datetime
+from app.schemas.food import FoodResponse
+from app.schemas.tool import ToolResponse
 
 
 class AnimalResponse(BaseModel):
@@ -14,6 +16,8 @@ class AnimalResponse(BaseModel):
     favorite_food_ids: Optional[List[int]] = None
     tool_ids: Optional[List[int]] = None
     world_ids: Optional[List[int]] = None
+    foods: Optional[List[FoodResponse]] = None
+    tools: Optional[List[ToolResponse]] = None
     created_at: Optional[str] = None
     updated_at: Optional[str] = None
 

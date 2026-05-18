@@ -5,7 +5,7 @@ from app.database import get_db
 from app.models import User
 from app.schemas import (
     FoodResponse, FoodDetail, UserFoodResponse, ApiResponse,
-    CollectFoodRequest, EditFoodNameRequest, DeleteFoodRequest,
+    CollectFoodRequest, UseFoodRequest, EditFoodNameRequest, DeleteFoodRequest,
     UserFoodCollectionResponse
 )
 from app.services.food_service import FoodService
@@ -45,6 +45,17 @@ async def collect_food(
     if not user_food:
         raise HTTPException(status_code=404, detail="食物不存在")
     return ApiResponse(code=200, message="收集成功", data=True)
+
+
+@router.post("/user/collect/food/use", response_model=ApiResponse)
+async def use_food(
+    request: UseFoodRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """使用一个食物"""
+    FoodService.use_food(db, current_user.id, request.food_id)
+    return ApiResponse(code=200, message="使用成功", data=True)
 
 
 @router.get("/user/collect/food/list", response_model=ApiResponse[List[UserFoodResponse]])

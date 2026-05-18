@@ -5,6 +5,7 @@ from app.services.tool_service import ToolService
 from app.services.food_service import FoodService
 from app.services.pet_service import PetService
 from app.services.world_service import WorldService
+from app.services.level_service import LevelService
 
 __all__ = [
     "UserService",
@@ -14,4 +15,5 @@ __all__ = [
     "FoodService",
     "PetService",
     "WorldService",
+    "LevelService",
 ]

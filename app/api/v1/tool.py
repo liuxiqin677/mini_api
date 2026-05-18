@@ -5,7 +5,7 @@ from app.database import get_db
 from app.models import User
 from app.schemas import (
     ToolResponse, ToolDetail, UserToolResponse, ApiResponse,
-    CollectToolRequest, EditToolNameRequest, DeleteToolRequest,
+    CollectToolRequest, UseToolRequest, EditToolNameRequest, DeleteToolRequest,
     UserToolCollectionResponse
 )
 from app.services.tool_service import ToolService
@@ -45,6 +45,17 @@ async def collect_tool(
     if not user_tool:
         raise HTTPException(status_code=404, detail="工具不存在")
     return ApiResponse(code=200, message="收集成功", data=True)
+
+
+@router.post("/user/collect/tool/use", response_model=ApiResponse)
+async def use_tool(
+    request: UseToolRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """使用一个工具"""
+    ToolService.use_tool(db, current_user.id, request.tool_id)
+    return ApiResponse(code=200, message="使用成功", data=True)
 
 
 @router.get("/user/collect/tool/list", response_model=ApiResponse[List[UserToolResponse]])

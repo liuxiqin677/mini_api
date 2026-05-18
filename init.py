@@ -34,36 +34,36 @@ WORLDS_DATA = [
 
 # 动物数据
 ANIMALS_DATA = [
-    {"name": "猴子", "emoji": "🐒", "description": "灵活的攀爬者", "rarity": "common", "category": "mammal", "world_ids": [1]},
-    {"name": "大猩猩", "emoji": "🦍", "description": "强壮的灵长类", "rarity": "rare", "category": "mammal", "world_ids": [1]},
-    {"name": "狮子", "emoji": "🦁", "description": "草原之王", "rarity": "rare", "category": "mammal", "world_ids": [1, 5]},
-    {"name": "老虎", "emoji": "🐯", "description": "森林霸主", "rarity": "epic", "category": "mammal", "world_ids": [5]},
-    {"name": "大象", "emoji": "🐘", "description": "陆地最大动物", "rarity": "rare", "category": "mammal", "world_ids": [1]},
-    {"name": "熊猫", "emoji": "🐼", "description": "国宝级动物", "rarity": "legendary", "category": "mammal", "world_ids": [5]},
-    {"name": "狼", "emoji": "🐺", "description": "荒野中的猎手", "rarity": "rare", "category": "wildlife", "world_ids": [5]},
-    {"name": "狐狸", "emoji": "🦊", "description": "狡猾的精灵", "rarity": "common", "category": "wildlife", "world_ids": [5]},
-    {"name": "鹰", "emoji": "🦅", "description": "天空猎手", "rarity": "rare", "category": "bird", "world_ids": [2]},
-    {"name": "鹦鹉", "emoji": "🦜", "description": "会说话的鸟", "rarity": "common", "category": "bird", "world_ids": [2]},
-    {"name": "孔雀", "emoji": "🦚", "description": "美丽的尾羽", "rarity": "epic", "category": "bird", "world_ids": [2]},
-    {"name": "猫头鹰", "emoji": "🦉", "description": "夜间猎手", "rarity": "rare", "category": "bird", "world_ids": [2]},
-    {"name": "蜥蜴", "emoji": "🦎", "description": "灵巧的小爬虫", "rarity": "common", "category": "reptile", "world_ids": [3]},
-    {"name": "蛇", "emoji": "🐍", "description": "神秘的爬行者", "rarity": "rare", "category": "reptile", "world_ids": [3]},
-    {"name": "鳄鱼", "emoji": "🐊", "description": "水中霸主", "rarity": "epic", "category": "reptile", "world_ids": [3, 4]},
-    {"name": "海豚", "emoji": "🐬", "description": "海洋精灵", "rarity": "rare", "category": "ocean", "world_ids": [4]},
-    {"name": "鲸鱼", "emoji": "🐋", "description": "海洋巨无霸", "rarity": "epic", "category": "ocean", "world_ids": [4]},
-    {"name": "鲨鱼", "emoji": "🦈", "description": "海洋猎手", "rarity": "rare", "category": "ocean", "world_ids": [4]},
-    {"name": "章鱼", "emoji": "🐙", "description": "八条腿的智者", "rarity": "legendary", "category": "ocean", "world_ids": [4]},
+    {"name": "猴子", "emoji": "🐒", "description": "灵活的攀爬者", "rarity": "common", "category": "mammal", "world_ids": [1], "tool_ids": [1, 2], "favorite_food_ids": [3, 4]},
+    {"name": "大猩猩", "emoji": "🦍", "description": "强壮的灵长类", "rarity": "rare", "category": "mammal", "world_ids": [1], "tool_ids": [2, 6], "favorite_food_ids": [3, 4, 5]},
+    {"name": "狮子", "emoji": "🦁", "description": "草原之王", "rarity": "rare", "category": "mammal", "world_ids": [1, 5], "tool_ids": [1, 2, 5], "favorite_food_ids": [1, 5]},
+    {"name": "老虎", "emoji": "🐯", "description": "森林霸主", "rarity": "epic", "category": "mammal", "world_ids": [5], "tool_ids": [1, 2, 5, 6], "favorite_food_ids": [1, 5, 6]},
+    {"name": "大象", "emoji": "🐘", "description": "陆地最大动物", "rarity": "rare", "category": "mammal", "world_ids": [1], "tool_ids": [2, 5], "favorite_food_ids": [4, 7]},
+    {"name": "熊猫", "emoji": "🐼", "description": "国宝级动物", "rarity": "legendary", "category": "mammal", "world_ids": [5], "tool_ids": [1, 2, 6], "favorite_food_ids": [3, 5, 6, 7]},
+    {"name": "狼", "emoji": "🐺", "description": "荒野中的猎手", "rarity": "rare", "category": "wildlife", "world_ids": [5], "tool_ids": [1, 2, 5], "favorite_food_ids": [1, 3]},
+    {"name": "狐狸", "emoji": "🦊", "description": "狡猾的精灵", "rarity": "common", "category": "wildlife", "world_ids": [5], "tool_ids": [1, 2], "favorite_food_ids": [1, 3, 4]},
+    {"name": "鹰", "emoji": "🦅", "description": "天空猎手", "rarity": "rare", "category": "bird", "world_ids": [2], "tool_ids": [1, 6], "favorite_food_ids": [2, 3]},
+    {"name": "鹦鹉", "emoji": "🦜", "description": "会说话的鸟", "rarity": "common", "category": "bird", "world_ids": [2], "tool_ids": [1, 2], "favorite_food_ids": [3, 4, 7]},
+    {"name": "孔雀", "emoji": "🦚", "description": "美丽的尾羽", "rarity": "epic", "category": "bird", "world_ids": [2], "tool_ids": [1, 2, 6], "favorite_food_ids": [3, 5, 7]},
+    {"name": "猫头鹰", "emoji": "🦉", "description": "夜间猎手", "rarity": "rare", "category": "bird", "world_ids": [2], "tool_ids": [1, 6], "favorite_food_ids": [2, 3]},
+    {"name": "蜥蜴", "emoji": "🦎", "description": "灵巧的小爬虫", "rarity": "common", "category": "reptile", "world_ids": [3], "tool_ids": [2, 3], "favorite_food_ids": [3, 7]},
+    {"name": "蛇", "emoji": "🐍", "description": "神秘的爬行者", "rarity": "rare", "category": "reptile", "world_ids": [3], "tool_ids": [2, 6], "favorite_food_ids": [1, 3]},
+    {"name": "鳄鱼", "emoji": "🐊", "description": "水中霸主", "rarity": "epic", "category": "reptile", "world_ids": [3, 4], "tool_ids": [2, 4, 6], "favorite_food_ids": [1, 2, 5]},
+    {"name": "海豚", "emoji": "🐬", "description": "海洋精灵", "rarity": "rare", "category": "ocean", "world_ids": [4], "tool_ids": [4, 6], "favorite_food_ids": [2, 5, 7]},
+    {"name": "鲸鱼", "emoji": "🐋", "description": "海洋巨无霸", "rarity": "epic", "category": "ocean", "world_ids": [4], "tool_ids": [4, 6], "favorite_food_ids": [2, 6, 7]},
+    {"name": "鲨鱼", "emoji": "🦈", "description": "海洋猎手", "rarity": "rare", "category": "ocean", "world_ids": [4], "tool_ids": [4, 6], "favorite_food_ids": [1, 2]},
+    {"name": "章鱼", "emoji": "🐙", "description": "八条腿的智者", "rarity": "legendary", "category": "ocean", "world_ids": [4], "tool_ids": [2, 4, 6], "favorite_food_ids": [2, 3, 5, 6]},
 ]
 
 # 植物数据
 PLANTS_DATA = [
-    {"name": "樱花", "emoji": "🌸", "description": "春日之花", "rarity": "common", "world_ids": [6]},
-    {"name": "玫瑰", "emoji": "🌹", "description": "爱情之花", "rarity": "rare", "world_ids": [6]},
-    {"name": "向日葵", "emoji": "🌻", "description": "阳光的追随者", "rarity": "common", "world_ids": [6]},
-    {"name": "仙人掌", "emoji": "🌵", "description": "沙漠中的勇士", "rarity": "common", "world_ids": [6]},
-    {"name": "四叶草", "emoji": "🍀", "description": "幸运的象征", "rarity": "legendary", "world_ids": [6]},
-    {"name": "郁金香", "emoji": "🌷", "description": "优雅的花朵", "rarity": "rare", "world_ids": [6]},
-    {"name": "百合", "emoji": "💐", "description": "纯洁的象征", "rarity": "epic", "world_ids": [6]},
+    {"name": "樱花", "emoji": "🌸", "description": "春日之花", "rarity": "common", "world_ids": [6], "tool_ids": [3, 6], "favorite_food_ids": [7, 8]},
+    {"name": "玫瑰", "emoji": "🌹", "description": "爱情之花", "rarity": "rare", "world_ids": [6], "tool_ids": [3, 6], "favorite_food_ids": [7, 8, 5]},
+    {"name": "向日葵", "emoji": "🌻", "description": "阳光的追随者", "rarity": "common", "world_ids": [6], "tool_ids": [3], "favorite_food_ids": [8, 7]},
+    {"name": "仙人掌", "emoji": "🌵", "description": "沙漠中的勇士", "rarity": "common", "world_ids": [6], "tool_ids": [3, 5], "favorite_food_ids": [7, 8]},
+    {"name": "四叶草", "emoji": "🍀", "description": "幸运的象征", "rarity": "legendary", "world_ids": [6], "tool_ids": [3, 6], "favorite_food_ids": [7, 8, 5, 6]},
+    {"name": "郁金香", "emoji": "🌷", "description": "优雅的花朵", "rarity": "rare", "world_ids": [6], "tool_ids": [3, 6], "favorite_food_ids": [7, 8, 5]},
+    {"name": "百合", "emoji": "💐", "description": "纯洁的象征", "rarity": "epic", "world_ids": [6], "tool_ids": [3, 6], "favorite_food_ids": [7, 8, 6]},
 ]
 
 # 工具数据
@@ -433,6 +433,46 @@ def test_api() -> bool:
                 print_step(f"  {item['name']}: {item['collected_count']}/{item['total_count']} ({item['progress']}%)", True)
         else:
             print_step(f"获取图鉴进度异常: {response.status_code}", False)
+
+        # 测试用户详情（等级、宠物数量、工具、食物）
+        print_step("测试用户详情...")
+        response = client.get("/api/v1/user/detail", headers=auth_headers)
+        if response.status_code == 200:
+            user_data = response.json()["data"]
+            print_step(f"当前用户等级: {user_data['level']}", True)
+            print_step(f"当前宠物数量: {user_data['pet_count']}", True)
+            print_step(f"当前工具数量: {user_data['tool_count']}", True)
+            print_step(f"当前食物数量: {user_data['food_count']}", True)
+
+            # 收集一些动物和植物来测试 pet_count
+            print_step("收集动物和植物来测试 pet_count...")
+            animal_collected = 0
+            plant_collected = 0
+
+            # 收集一些动物
+            for i in range(1, min(4, len(ANIMALS_DATA) + 1)):
+                response = client.post("/api/v1/user/collect/animal", json={"animal_id": i}, headers=auth_headers)
+                if response.status_code == 200:
+                    animal_collected += 1
+
+            # 收集一些植物
+            for i in range(1, min(3, len(PLANTS_DATA) + 1)):
+                response = client.post("/api/v1/user/collect/plant", json={"plant_id": i}, headers=auth_headers)
+                if response.status_code == 200:
+                    plant_collected += 1
+
+            print_step(f"收集了 {animal_collected} 只动物，{plant_collected} 株植物", True)
+
+            # 再次检查用户详情
+            response = client.get("/api/v1/user/detail", headers=auth_headers)
+            if response.status_code == 200:
+                user_data = response.json()["data"]
+                print_step(f"收集后用户等级: {user_data['level']}", True)
+                print_step(f"收集后宠物数量: {user_data['pet_count']}", True)
+                print_step(f"收集后工具数量: {user_data['tool_count']}", True)
+                print_step(f"收集后食物数量: {user_data['food_count']}", True)
+        else:
+            print_step(f"获取用户详情异常: {response.status_code}", False)
 
         print("\nAPI测试完成！所有主要接口正常工作。")
         return True

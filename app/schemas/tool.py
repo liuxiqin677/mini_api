@@ -52,6 +52,10 @@ class CollectToolRequest(BaseModel):
     tool_id: int = Field(..., description="工具ID")
 
 
+class UseToolRequest(BaseModel):
+    tool_id: int = Field(..., description="工具ID")
+
+
 class EditToolNameRequest(BaseModel):
     tool_id: int = Field(..., description="用户工具记录ID")
     name: str = Field(..., description="新名称")

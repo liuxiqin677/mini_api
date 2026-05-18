@@ -1,10 +1,71 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
-from app.models import Plant, UserPlant
+from app.models import Plant, UserPlant, Food, Tool
 from app.schemas import PlantResponse, PlantDetail, UserPlantResponse
+from app.schemas.food import FoodResponse
+from app.schemas.tool import ToolResponse
+from app.services.level_service import LevelService
 
 
 class PlantService:
+    @staticmethod
+    def _get_foods_by_ids(db: Session, ids: Optional[List[int]]) -> List[FoodResponse]:
+        """根据 ID 列表获取食物列表"""
+        if not ids:
+            return []
+
+        foods = db.query(Food).filter(Food.id.in_(ids)).all()
+        result = []
+        for food in foods:
+            result.append(FoodResponse(
+                id=food.id,
+                name=food.name,
+                emoji=food.emoji,
+                description=food.description,
+                rarity=food.rarity,
+                is_collected=False,
+                world_ids=food.world_ids,
+                target_ids=food.target_ids,
+                created_at=food.created_at,
+                updated_at=food.updated_at
+            ))
+        # 按照原始 ids 的顺序排序
+        id_to_item = {item.id: item for item in result}
+        sorted_result = []
+        for item_id in ids:
+            if item_id in id_to_item:
+                sorted_result.append(id_to_item[item_id])
+        return sorted_result
+
+    @staticmethod
+    def _get_tools_by_ids(db: Session, ids: Optional[List[int]]) -> List[ToolResponse]:
+        """根据 ID 列表获取工具列表"""
+        if not ids:
+            return []
+
+        tools = db.query(Tool).filter(Tool.id.in_(ids)).all()
+        result = []
+        for tool in tools:
+            result.append(ToolResponse(
+                id=tool.id,
+                name=tool.name,
+                emoji=tool.emoji,
+                description=tool.description,
+                rarity=tool.rarity,
+                is_collected=False,
+                world_ids=tool.world_ids,
+                target_ids=tool.target_ids,
+                created_at=tool.created_at,
+                updated_at=tool.updated_at
+            ))
+        # 按照原始 ids 的顺序排序
+        id_to_item = {item.id: item for item in result}
+        sorted_result = []
+        for item_id in ids:
+            if item_id in id_to_item:
+                sorted_result.append(id_to_item[item_id])
+        return sorted_result
+
     @staticmethod
     def get_all_plants(db: Session, user_id: int) -> List[PlantResponse]:
         plants = db.query(Plant).all()
@@ -12,6 +73,8 @@ class PlantService:
 
         result = []
         for plant in plants:
+            foods = PlantService._get_foods_by_ids(db, plant.favorite_food_ids)
+            tools = PlantService._get_tools_by_ids(db, plant.tool_ids)
             result.append(PlantResponse(
                 id=plant.id,
                 name=plant.name,
@@ -22,6 +85,8 @@ class PlantService:
                 favorite_food_ids=plant.favorite_food_ids,
                 tool_ids=plant.tool_ids,
                 world_ids=plant.world_ids,
+                foods=foods,
+                tools=tools,
                 created_at=plant.created_at,
                 updated_at=plant.updated_at
             ))
@@ -38,6 +103,9 @@ class PlantService:
             UserPlant.plant_id == plant_id
         ).first()
 
+        foods = PlantService._get_foods_by_ids(db, plant.favorite_food_ids)
+        tools = PlantService._get_tools_by_ids(db, plant.tool_ids)
+
         return PlantDetail(
             id=plant.id,
             name=plant.name,
@@ -48,6 +116,8 @@ class PlantService:
             favorite_food_ids=plant.favorite_food_ids,
             tool_ids=plant.tool_ids,
             world_ids=plant.world_ids,
+            foods=foods,
+            tools=tools,
             created_at=plant.created_at,
             updated_at=plant.updated_at
         )
@@ -68,20 +138,35 @@ class PlantService:
         db.add(user_plant)
         db.commit()
         db.refresh(user_plant)
+
+        LevelService.update_user_level(db, user_id)
+
         return user_plant
 
     @staticmethod
     def get_user_plants(db: Session, user_id: int) -> List[UserPlantResponse]:
-        user_plants = db.query(UserPlant).filter(UserPlant.user_id == user_id).all()
+        # Join with Plant table to get emoji and original name
+        user_plants = db.query(UserPlant, Plant).join(
+            Plant, UserPlant.plant_id == Plant.id
+        ).filter(UserPlant.user_id == user_id).all()
+
         result = []
-        for up in user_plants:
+        for up, plant in user_plants:
+            foods = PlantService._get_foods_by_ids(db, plant.favorite_food_ids)
+            tools = PlantService._get_tools_by_ids(db, plant.tool_ids)
             result.append(UserPlantResponse(
                 id=up.id,
                 user_id=up.user_id,
                 plant_id=up.plant_id,
                 name=up.name,
+                original_name=plant.name,
+                emoji=plant.emoji,
                 description=up.description,
                 rarity=up.rarity,
+                favorite_food_ids=plant.favorite_food_ids,
+                tool_ids=plant.tool_ids,
+                foods=foods,
+                tools=tools,
                 created_at=up.created_at,
                 updated_at=up.updated_at
             ))

@@ -52,6 +52,10 @@ class CollectFoodRequest(BaseModel):
     food_id: int = Field(..., description="食物ID")
 
 
+class UseFoodRequest(BaseModel):
+    food_id: int = Field(..., description="食物ID")
+
+
 class EditFoodNameRequest(BaseModel):
     food_id: int = Field(..., description="用户食物记录ID")
     name: str = Field(..., description="新名称")

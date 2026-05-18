@@ -2,6 +2,7 @@ from typing import List, Optional, Tuple
 from sqlalchemy.orm import Session
 from app.models import Food, UserFood
 from app.schemas import FoodResponse, FoodDetail, UserFoodResponse, UserFoodWithDetail, UserFoodCollectionResponse
+from app.services.level_service import LevelService
 
 
 class FoodService:
@@ -56,20 +57,16 @@ class FoodService:
         if not food:
             return None
 
-        # 检查用户是否已经收集过这个食物
         user_food = db.query(UserFood).filter(
             UserFood.user_id == user_id,
             UserFood.food_id == food_id
         ).first()
 
         if user_food:
-            # 如果已经收集过，数量+1
             user_food.count += 1
             db.commit()
             db.refresh(user_food)
-            return user_food
         else:
-            # 如果没有收集过，创建新记录
             user_food = UserFood(
                 user_id=user_id,
                 food_id=food_id,
@@ -81,7 +78,32 @@ class FoodService:
             db.add(user_food)
             db.commit()
             db.refresh(user_food)
-            return user_food
+
+        LevelService.update_user_level(db, user_id)
+
+        return user_food
+
+    @staticmethod
+    def use_food(db: Session, user_id: int, food_id: int) -> Optional[UserFood]:
+        """使用一个食物（减少数量）"""
+        user_food = db.query(UserFood).filter(
+            UserFood.user_id == user_id,
+            UserFood.food_id == food_id
+        ).first()
+        if not user_food:
+            return None
+
+        if user_food.count > 1:
+            user_food.count -= 1
+            db.commit()
+            db.refresh(user_food)
+        else:
+            # 数量为1时删除记录
+            db.delete(user_food)
+            db.commit()
+            return None
+
+        return user_food
 
     @staticmethod
     def get_user_foods(db: Session, user_id: int) -> List[UserFoodResponse]:
@@ -110,7 +132,6 @@ class FoodService:
 
     @staticmethod
     def get_user_foods_with_detail(db: Session, user_id: int) -> Tuple[List[UserFoodWithDetail], int]:
-        """获取用户收集的食物列表，包含食物详情和数量"""
         user_foods = db.query(UserFood).filter(UserFood.user_id == user_id).all()
         food_ids = [uf.food_id for uf in user_foods]
         foods = db.query(Food).filter(Food.id.in_(food_ids)).all()

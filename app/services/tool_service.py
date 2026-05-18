@@ -2,6 +2,7 @@ from typing import List, Optional, Tuple
 from sqlalchemy.orm import Session
 from app.models import Tool, UserTool
 from app.schemas import ToolResponse, ToolDetail, UserToolResponse, UserToolWithDetail, UserToolCollectionResponse
+from app.services.level_service import LevelService
 
 
 class ToolService:
@@ -56,20 +57,16 @@ class ToolService:
         if not tool:
             return None
 
-        # 检查用户是否已经收集过这个工具
         user_tool = db.query(UserTool).filter(
             UserTool.user_id == user_id,
             UserTool.tool_id == tool_id
         ).first()
 
         if user_tool:
-            # 如果已经收集过，数量+1
             user_tool.count += 1
             db.commit()
             db.refresh(user_tool)
-            return user_tool
         else:
-            # 如果没有收集过，创建新记录
             user_tool = UserTool(
                 user_id=user_id,
                 tool_id=tool_id,
@@ -81,7 +78,32 @@ class ToolService:
             db.add(user_tool)
             db.commit()
             db.refresh(user_tool)
-            return user_tool
+
+        LevelService.update_user_level(db, user_id)
+
+        return user_tool
+
+    @staticmethod
+    def use_tool(db: Session, user_id: int, tool_id: int) -> Optional[UserTool]:
+        """使用一个工具（减少数量）"""
+        user_tool = db.query(UserTool).filter(
+            UserTool.user_id == user_id,
+            UserTool.tool_id == tool_id
+        ).first()
+        if not user_tool:
+            return None
+
+        if user_tool.count > 1:
+            user_tool.count -= 1
+            db.commit()
+            db.refresh(user_tool)
+        else:
+            # 数量为1时删除记录
+            db.delete(user_tool)
+            db.commit()
+            return None
+
+        return user_tool
 
     @staticmethod
     def get_user_tools(db: Session, user_id: int) -> List[UserToolResponse]:
@@ -110,7 +132,6 @@ class ToolService:
 
     @staticmethod
     def get_user_tools_with_detail(db: Session, user_id: int) -> Tuple[List[UserToolWithDetail], int]:
-        """获取用户收集的工具列表，包含工具详情和数量"""
         user_tools = db.query(UserTool).filter(UserTool.user_id == user_id).all()
         tool_ids = [ut.tool_id for ut in user_tools]
         tools = db.query(Tool).filter(Tool.id.in_(tool_ids)).all()

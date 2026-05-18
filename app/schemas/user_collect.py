@@ -1,6 +1,8 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
+from app.schemas.food import FoodResponse
+from app.schemas.tool import ToolResponse
 
 
 class UserAnimalResponse(BaseModel):
@@ -8,8 +10,14 @@ class UserAnimalResponse(BaseModel):
     user_id: int
     animal_id: int
     name: str
+    original_name: str
+    emoji: str
     description: Optional[str] = None
     rarity: str
+    favorite_food_ids: Optional[List[int]] = None
+    tool_ids: Optional[List[int]] = None
+    foods: Optional[List[FoodResponse]] = None
+    tools: Optional[List[ToolResponse]] = None
     created_at: datetime
     updated_at: datetime
 
@@ -22,8 +30,14 @@ class UserPlantResponse(BaseModel):
     user_id: int
     plant_id: int
     name: str
+    original_name: str
+    emoji: str
     description: Optional[str] = None
     rarity: str
+    favorite_food_ids: Optional[List[int]] = None
+    tool_ids: Optional[List[int]] = None
+    foods: Optional[List[FoodResponse]] = None
+    tools: Optional[List[ToolResponse]] = None
     created_at: datetime
     updated_at: datetime
 
