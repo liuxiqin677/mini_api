@@ -53,6 +53,8 @@ from app.schemas.user_collect import (
     UserToolResponse,
     UserFoodResponse,
     UserPetResponse,
+    FootprintResponse,
+    NurtureRequest,
 )
 from app.schemas.collection import (
     CollectionProgressItem,
@@ -104,6 +106,8 @@ __all__ = [
     "UserToolResponse",
     "UserFoodResponse",
     "UserPetResponse",
+    "FootprintResponse",
+    "NurtureRequest",
     "CollectionProgressItem",
     "CollectionProgressResponse",
 ]

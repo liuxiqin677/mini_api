@@ -10,6 +10,7 @@ from app.models.user_plant import UserPlant
 from app.models.user_tool import UserTool
 from app.models.user_food import UserFood
 from app.models.user_pet import UserPet
+from app.models.footprint import Footprint
 
 __all__ = [
     "User",
@@ -24,4 +25,5 @@ __all__ = [
     "UserTool",
     "UserFood",
     "UserPet",
+    "Footprint",
 ]

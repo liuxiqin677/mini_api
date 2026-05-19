@@ -13,6 +13,7 @@ class UserPlant(Base):
     name = Column(String(50), nullable=False, comment="植物名称（可自定义）")
     description = Column(String(200), nullable=True, comment="描述")
     rarity = Column(String(20), nullable=False, comment="稀有度")
+    love = Column(Integer, nullable=False, default=0, comment="好感度")
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 

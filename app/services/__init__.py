@@ -6,6 +6,8 @@ from app.services.food_service import FoodService
 from app.services.pet_service import PetService
 from app.services.world_service import WorldService
 from app.services.level_service import LevelService
+from app.services.footprint_service import FootprintService
+from app.services.nurture_service import NurtureService
 
 __all__ = [
     "UserService",
@@ -16,4 +18,6 @@ __all__ = [
     "PetService",
     "WorldService",
     "LevelService",
+    "FootprintService",
+    "NurtureService",
 ]

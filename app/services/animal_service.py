@@ -1,6 +1,6 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
-from app.models import Animal, UserAnimal, Food, Tool
+from app.models import Animal, UserAnimal, Food, Tool, Footprint
 from app.schemas import AnimalResponse, AnimalDetail, UserAnimalResponse
 from app.schemas.food import FoodResponse
 from app.schemas.tool import ToolResponse
@@ -8,6 +8,30 @@ from app.services.level_service import LevelService
 
 
 class AnimalService:
+    @staticmethod
+    def _create_footprint(
+        db: Session,
+        user_id: int,
+        action_type: str,
+        target_type: str,
+        target_id: int,
+        target_name: str,
+        detail: Optional[str] = None,
+        change_value: Optional[int] = None
+    ):
+        """创建足迹记录"""
+        footprint = Footprint(
+            user_id=user_id,
+            action_type=action_type,
+            target_type=target_type,
+            target_id=target_id,
+            target_name=target_name,
+            detail=detail,
+            change_value=change_value
+        )
+        db.add(footprint)
+        db.commit()
+
     @staticmethod
     def _get_foods_by_ids(db: Session, ids: Optional[List[int]]) -> List[FoodResponse]:
         """根据 ID 列表获取食物列表"""
@@ -135,11 +159,18 @@ class AnimalService:
             animal_id=animal_id,
             name=animal.name,
             description=animal.description,
-            rarity=animal.rarity
+            rarity=animal.rarity,
+            love=0
         )
         db.add(user_animal)
         db.commit()
         db.refresh(user_animal)
+
+        # 记录足迹
+        AnimalService._create_footprint(
+            db, user_id, "collect", "animal", animal_id, animal.name,
+            f"收集了 {animal.name}"
+        )
 
         LevelService.update_user_level(db, user_id)
 
@@ -169,13 +200,14 @@ class AnimalService:
                 tool_ids=animal.tool_ids,
                 foods=foods,
                 tools=tools,
+                love=ua.love,
                 created_at=ua.created_at,
                 updated_at=ua.updated_at
             ))
         return result
 
     @staticmethod
-    def edit_animal_name(db: Session, user_animal_id: int, user_id: int, name: str) -> Optional[UserAnimal]:
+    def edit_animal_name(db: Session, user_animal_id: int, user_id: int, name: str, old_name: str) -> Optional[UserAnimal]:
         user_animal = db.query(UserAnimal).filter(
             UserAnimal.id == user_animal_id,
             UserAnimal.user_id == user_id
@@ -186,6 +218,13 @@ class AnimalService:
         user_animal.name = name
         db.commit()
         db.refresh(user_animal)
+
+        # 记录足迹
+        AnimalService._create_footprint(
+            db, user_id, "edit", "animal", user_animal.animal_id, name,
+            f"将名字从 {old_name} 修改为 {name}"
+        )
+
         return user_animal
 
     @staticmethod
@@ -196,6 +235,12 @@ class AnimalService:
         ).first()
         if not user_animal:
             return False
+
+        # 记录足迹
+        AnimalService._create_footprint(
+            db, user_id, "delete", "animal", user_animal.animal_id, user_animal.name,
+            f"删除了 {user_animal.name}"
+        )
 
         db.delete(user_animal)
         db.commit()

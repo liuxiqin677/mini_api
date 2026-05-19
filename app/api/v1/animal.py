@@ -97,7 +97,19 @@ async def edit_animal_name(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    user_animal = AnimalService.edit_animal_name(db, request.animal_id, current_user.id, request.name)
+    # 先查询用户的动物以获取旧名称
+    from app.models import UserAnimal
+    old_animal = db.query(UserAnimal).filter(
+        UserAnimal.id == request.animal_id,
+        UserAnimal.user_id == current_user.id
+    ).first()
+
+    if not old_animal:
+        raise HTTPException(status_code=404, detail="记录不存在")
+
+    old_name = old_animal.name
+
+    user_animal = AnimalService.edit_animal_name(db, request.animal_id, current_user.id, request.name, old_name)
     if not user_animal:
         raise HTTPException(status_code=404, detail="记录不存在")
     return ApiResponse(code=200, message="编辑成功", data=True)

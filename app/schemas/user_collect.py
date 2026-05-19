@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional, List
 from datetime import datetime
 from app.schemas.food import FoodResponse
@@ -18,6 +18,7 @@ class UserAnimalResponse(BaseModel):
     tool_ids: Optional[List[int]] = None
     foods: Optional[List[FoodResponse]] = None
     tools: Optional[List[ToolResponse]] = None
+    love: int = 0
     created_at: datetime
     updated_at: datetime
 
@@ -38,11 +39,42 @@ class UserPlantResponse(BaseModel):
     tool_ids: Optional[List[int]] = None
     foods: Optional[List[FoodResponse]] = None
     tools: Optional[List[ToolResponse]] = None
+    love: int = 0
     created_at: datetime
     updated_at: datetime
 
     class Config:
         from_attributes = True
+
+
+class FootprintResponse(BaseModel):
+    id: int
+    user_id: int
+    action_type: str
+    target_type: str
+    target_id: int
+    target_name: str
+    detail: Optional[str] = None
+    change_value: Optional[int] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+# 培养请求类型
+class NurtureType:
+    FEED = "feed"          # 喂食
+    PET = "pet"            # 抚摸
+    WATER = "water"        # 浇水
+    FERTILIZE = "fertilize" # 施肥
+
+
+class NurtureRequest(BaseModel):
+    target_type: str = Field(..., description="目标类型: animal 或 plant")
+    target_id: int = Field(..., description="目标ID")
+    action_type: str = Field(..., description="操作类型: feed, pet, water, fertilize")
+
 
 
 class UserToolResponse(BaseModel):

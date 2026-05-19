@@ -1,6 +1,6 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
-from app.models import Plant, UserPlant, Food, Tool
+from app.models import Plant, UserPlant, Food, Tool, Footprint
 from app.schemas import PlantResponse, PlantDetail, UserPlantResponse
 from app.schemas.food import FoodResponse
 from app.schemas.tool import ToolResponse
@@ -8,6 +8,30 @@ from app.services.level_service import LevelService
 
 
 class PlantService:
+    @staticmethod
+    def _create_footprint(
+        db: Session,
+        user_id: int,
+        action_type: str,
+        target_type: str,
+        target_id: int,
+        target_name: str,
+        detail: Optional[str] = None,
+        change_value: Optional[int] = None
+    ):
+        """创建足迹记录"""
+        footprint = Footprint(
+            user_id=user_id,
+            action_type=action_type,
+            target_type=target_type,
+            target_id=target_id,
+            target_name=target_name,
+            detail=detail,
+            change_value=change_value
+        )
+        db.add(footprint)
+        db.commit()
+
     @staticmethod
     def _get_foods_by_ids(db: Session, ids: Optional[List[int]]) -> List[FoodResponse]:
         """根据 ID 列表获取食物列表"""
@@ -133,11 +157,18 @@ class PlantService:
             plant_id=plant_id,
             name=plant.name,
             description=plant.description,
-            rarity=plant.rarity
+            rarity=plant.rarity,
+            love=0
         )
         db.add(user_plant)
         db.commit()
         db.refresh(user_plant)
+
+        # 记录足迹
+        PlantService._create_footprint(
+            db, user_id, "collect", "plant", plant_id, plant.name,
+            f"收集了 {plant.name}"
+        )
 
         LevelService.update_user_level(db, user_id)
 
@@ -167,13 +198,14 @@ class PlantService:
                 tool_ids=plant.tool_ids,
                 foods=foods,
                 tools=tools,
+                love=up.love,
                 created_at=up.created_at,
                 updated_at=up.updated_at
             ))
         return result
 
     @staticmethod
-    def edit_plant_name(db: Session, user_plant_id: int, user_id: int, name: str) -> Optional[UserPlant]:
+    def edit_plant_name(db: Session, user_plant_id: int, user_id: int, name: str, old_name: str) -> Optional[UserPlant]:
         user_plant = db.query(UserPlant).filter(
             UserPlant.id == user_plant_id,
             UserPlant.user_id == user_id
@@ -184,6 +216,13 @@ class PlantService:
         user_plant.name = name
         db.commit()
         db.refresh(user_plant)
+
+        # 记录足迹
+        PlantService._create_footprint(
+            db, user_id, "edit", "plant", user_plant.plant_id, name,
+            f"将名字从 {old_name} 修改为 {name}"
+        )
+
         return user_plant
 
     @staticmethod
@@ -194,6 +233,12 @@ class PlantService:
         ).first()
         if not user_plant:
             return False
+
+        # 记录足迹
+        PlantService._create_footprint(
+            db, user_id, "delete", "plant", user_plant.plant_id, user_plant.name,
+            f"删除了 {user_plant.name}"
+        )
 
         db.delete(user_plant)
         db.commit()

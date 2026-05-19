@@ -61,7 +61,19 @@ async def edit_plant_name(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    user_plant = PlantService.edit_plant_name(db, request.plant_id, current_user.id, request.name)
+    # 先查询用户的植物以获取旧名称
+    from app.models import UserPlant
+    old_plant = db.query(UserPlant).filter(
+        UserPlant.id == request.plant_id,
+        UserPlant.user_id == current_user.id
+    ).first()
+
+    if not old_plant:
+        raise HTTPException(status_code=404, detail="记录不存在")
+
+    old_name = old_plant.name
+
+    user_plant = PlantService.edit_plant_name(db, request.plant_id, current_user.id, request.name, old_name)
     if not user_plant:
         raise HTTPException(status_code=404, detail="记录不存在")
     return ApiResponse(code=200, message="编辑成功", data=True)

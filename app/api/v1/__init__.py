@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.v1 import user, auth, animal, plant, tool, food, pet, world, collection
+from app.api.v1 import user, auth, animal, plant, tool, food, pet, world, collection, footprint, nurture
 
 router = APIRouter()
 
@@ -12,3 +12,5 @@ router.include_router(food.router, prefix="", tags=["食物"])
 router.include_router(pet.router, prefix="", tags=["宠物"])
 router.include_router(world.router, prefix="", tags=["世界"])
 router.include_router(collection.router, prefix="", tags=["图鉴"])
+router.include_router(footprint.router, prefix="", tags=["足迹"])
+router.include_router(nurture.router, prefix="", tags=["培养"])

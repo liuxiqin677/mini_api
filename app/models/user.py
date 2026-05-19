@@ -20,3 +20,4 @@ class User(Base):
     user_tools = relationship("UserTool", back_populates="user", cascade="all, delete-orphan")
     user_foods = relationship("UserFood", back_populates="user", cascade="all, delete-orphan")
     user_pets = relationship("UserPet", back_populates="user", cascade="all, delete-orphan")
+    footprints = relationship("Footprint", back_populates="user", cascade="all, delete-orphan")
